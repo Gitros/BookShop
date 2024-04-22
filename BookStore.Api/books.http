@@ -3,3 +3,16 @@ GET http://localhost:5070/books
 ###
 
 GET http://localhost:5070/books/1
+
+###
+
+POST http://localhost:5070/books
+Content-Type: application/json
+
+{
+    "name": "Tokyo ghoul",
+    "genre": "Manga",
+    "price": "20.99",
+    "author": "Sui Ishida",
+    "releaseDate": "2011-10-21"
+}

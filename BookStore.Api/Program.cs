@@ -3,6 +3,8 @@ using BookStore.Api.Dtos;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+const string GetGameEndpointName = "GetBook";
+
 List<BookDto> books = [
     new (
         1,
@@ -31,7 +33,24 @@ List<BookDto> books = [
 app.MapGet("books", () => books);
 
 // GET /books/1
-app.MapGet("books/{id}", (int id) => books.Find(game => game.Id == id));
+app.MapGet("books/{id}", (int id) => books.Find(book => book.Id == id))
+    .WithName(GetGameEndpointName);
+
+// POST /books
+app.MapPost("books", (CreateBookDto newBook) =>
+{
+    BookDto book = new(
+        books.Count + 1,
+        newBook.Name,
+        newBook.Genre,
+        newBook.Price,
+        newBook.Author,
+        newBook.ReleaseDate);
+
+    books.Add(book);
+
+    return Results.CreatedAtRoute(GetGameEndpointName, new { id = book.Id }, book);
+});
 
 app.MapGet("/", () => "Hello World!");
 
