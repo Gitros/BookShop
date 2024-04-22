@@ -1,0 +1,5 @@
+GET http://localhost:5070/books
+
+###
+
+GET http://localhost:5070/books/1
