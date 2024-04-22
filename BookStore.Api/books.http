@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:5070/books/1
+PUT http://localhost:5070/books/5
 Content-Type: application/json
 
 {

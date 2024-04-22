@@ -62,6 +62,11 @@ app.MapPut("books/{id}", (int id, UpdateBookDto updatedBook) =>
 {
     var index = books.FindIndex(book => book.Id == id);
 
+    if (index == -1)
+    {
+        return Results.NotFound();
+    }
+
     books[index] = new BookDto(
         id,
         updatedBook.Name,
