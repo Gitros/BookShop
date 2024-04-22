@@ -29,3 +29,7 @@ Content-Type: application/json
     "author": "J.K Rolling",
     "releaseDate": "2020-09-12"
 }
+
+###
+
+DELETE http://localhost:5070/books/1
