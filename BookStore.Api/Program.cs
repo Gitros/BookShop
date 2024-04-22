@@ -52,6 +52,24 @@ app.MapPost("books", (CreateBookDto newBook) =>
     return Results.CreatedAtRoute(GetGameEndpointName, new { id = book.Id }, book);
 });
 
+// PUT /books/1
+app.MapPut("books/{id}", (int id, UpdateBookDto updatedBook) =>
+{
+    var index = books.FindIndex(book => book.Id == id);
+
+    books[index] = new BookDto(
+        id,
+        updatedBook.Name,
+        updatedBook.Genre,
+        updatedBook.Price,
+        updatedBook.Author,
+        updatedBook.ReleaseDate
+    );
+
+    return Results.NoContent();
+});
+
+
 app.MapGet("/", () => "Hello World!");
 
 app.Run();

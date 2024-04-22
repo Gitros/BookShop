@@ -2,7 +2,7 @@ GET http://localhost:5070/books
 
 ###
 
-GET http://localhost:5070/books/1
+GET http://localhost:5070/books/4
 
 ###
 
@@ -15,4 +15,17 @@ Content-Type: application/json
     "price": "20.99",
     "author": "Sui Ishida",
     "releaseDate": "2011-10-21"
+}
+
+###
+
+PUT http://localhost:5070/books/1
+Content-Type: application/json
+
+{
+    "name": "Harry Potter 2",
+    "genre": "Fantasy",
+    "price": 25.51,
+    "author": "J.K Rolling",
+    "releaseDate": "2020-09-12"
 }
