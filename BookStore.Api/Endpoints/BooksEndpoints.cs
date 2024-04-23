@@ -16,37 +16,38 @@ public static class BooksEndpoints
                         .WithParameterValidation();
 
         // GET /books
-        group.MapGet("/", (BookStoreContext dbContext) =>
-            dbContext.Books
+        group.MapGet("/", async (BookStoreContext dbContext) =>
+            await dbContext.Books
                      .Include(book => book.Genre)
                      .Include(book => book.Author)
                      .Select(book => book.ToBookSummaryDto())
-                     .AsNoTracking());
+                     .AsNoTracking()
+                     .ToListAsync());
 
         // GET /books/1
-        group.MapGet("/{id}", (int id, BookStoreContext dbContext) =>
+        group.MapGet("/{id}", async (int id, BookStoreContext dbContext) =>
         {
-            Book? book = dbContext.Books.Find(id);
+            Book? book = await dbContext.Books.FindAsync(id);
 
             return book is null ? Results.NotFound() : Results.Ok(book.ToBookDetailsDto());
         })
         .WithName(GetBookEndpointName);
 
         // POST /books
-        group.MapPost("/", (CreateBookDto newBook, BookStoreContext dbContext) =>
+        group.MapPost("/", async (CreateBookDto newBook, BookStoreContext dbContext) =>
         {
             Book book = newBook.ToEntity();
 
             dbContext.Books.Add(book);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return Results.CreatedAtRoute(GetBookEndpointName, new { id = book.Id }, book.ToBookDetailsDto());
         });
 
         // PUT /books/id
-        group.MapPut("/{id}", (int id, UpdateBookDto updatedBook, BookStoreContext dbContext) =>
+        group.MapPut("/{id}", async (int id, UpdateBookDto updatedBook, BookStoreContext dbContext) =>
         {
-            var existingBook = dbContext.Books.Find(id);
+            var existingBook = await dbContext.Books.FindAsync(id);
 
             if (existingBook is null)
             {
@@ -57,17 +58,17 @@ public static class BooksEndpoints
                             .CurrentValues
                             .SetValues(updatedBook.ToEntity(id));
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return Results.NoContent();
         });
 
         // DELETE /book/
-        group.MapDelete("/{id}", (int id, BookStoreContext dbContext) =>
+        group.MapDelete("/{id}", async (int id, BookStoreContext dbContext) =>
         {
-            dbContext.Books
+            await dbContext.Books
                     .Where(book => book.Id == id)
-                    .ExecuteDelete();
+                    .ExecuteDeleteAsync();
 
             return Results.NoContent();
         });

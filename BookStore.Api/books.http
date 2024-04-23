@@ -10,11 +10,11 @@ POST http://localhost:5070/books
 Content-Type: application/json
 
 {
-    "name": "Wiedźmin - ostatni rycerz",
+    "name": "Wiedźmin - kozak",
     "genreId": 2,
-    "price": 20.99,
+    "price": 21.99,
     "authorId": 3,
-    "releaseDate": "2011-10-21"
+    "releaseDate": "2015-10-21"
 }
 
 ###
