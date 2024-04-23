@@ -1,6 +1,7 @@
 ﻿using BookStore.Api.Data;
 using BookStore.Api.Dtos;
 using BookStore.Api.Entities;
+using BookStore.Api.Mapping;
 
 namespace BookStore.Api.Endpoints;
 
@@ -51,30 +52,15 @@ public static class BooksEndpoints
         // POST /books
         group.MapPost("/", (CreateBookDto newBook, BookStoreContext dbContext) =>
         {
-            Book book = new()
-            {
-                Name = newBook.Name,
-                Genre = dbContext.Genres.Find(newBook.GenreId),
-                GenreId = newBook.GenreId,
-                Price = newBook.Price,
-                Author = dbContext.Authors.Find(newBook.AuthorId),
-                AuthorId = newBook.AuthorId,
-                ReleaseDate = newBook.ReleaseDate
-            };
+
+            Book book = newBook.ToEntity();
+            book.Genre = dbContext.Genres.Find(newBook.GenreId);
+            book.Author = dbContext.Authors.Find(newBook.AuthorId);
 
             dbContext.Books.Add(book);
             dbContext.SaveChanges();
 
-            BookDto bookDto = new(
-                book.Id,
-                book.Name,
-                book.Genre!.Name,
-                book.Price,
-                book.Author!.Name,
-                book.ReleaseDate
-            );
-
-            return Results.CreatedAtRoute(GetBookEndpointName, new { id = book.Id }, bookDto);
+            return Results.CreatedAtRoute(GetBookEndpointName, new { id = book.Id }, book.ToDto());
         });
 
         // PUT /books/1
