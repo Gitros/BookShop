@@ -39,7 +39,12 @@ public static class BooksEndpoints
                         .WithParameterValidation();
 
         // GET /books
-        group.MapGet("/", () => books);
+        group.MapGet("/", (BookStoreContext dbContext) =>
+            dbContext.Books
+                     .Include(book => book.Genre)
+                     .Include(book => book.Author)
+                     .Select(book => book.ToBookSummaryDto())
+                     .AsNoTracking());
 
         // GET /books/1
         group.MapGet("/{id}", (int id, BookStoreContext dbContext) =>
