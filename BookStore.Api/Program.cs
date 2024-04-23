@@ -10,4 +10,6 @@ var app = builder.Build();
 
 app.MapBooksEndpoints();
 
+app.MigrateDb();
+
 app.Run();
