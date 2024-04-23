@@ -2,6 +2,7 @@
 using BookStore.Api.Dtos;
 using BookStore.Api.Entities;
 using BookStore.Api.Mapping;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Api.Endpoints;
 
@@ -60,24 +61,21 @@ public static class BooksEndpoints
             return Results.CreatedAtRoute(GetBookEndpointName, new { id = book.Id }, book.ToBookDetailsDto());
         });
 
-        // PUT /books/1
-        group.MapPut("/{id}", (int id, UpdateBookDto updatedBook) =>
+        // PUT /books/id
+        group.MapPut("/{id}", (int id, UpdateBookDto updatedBook, BookStoreContext dbContext) =>
         {
-            var index = books.FindIndex(book => book.Id == id);
+            var existingBook = dbContext.Books.Find(id);
 
-            if (index == -1)
+            if (existingBook is null)
             {
                 return Results.NotFound();
             }
 
-            books[index] = new BookSummaryDto(
-                id,
-                updatedBook.Name,
-                updatedBook.Genre,
-                updatedBook.Price,
-                updatedBook.Author,
-                updatedBook.ReleaseDate
-            );
+            dbContext.Entry(existingBook)
+                            .CurrentValues
+                            .SetValues(updatedBook.ToEntity(id));
+
+            dbContext.SaveChanges();
 
             return Results.NoContent();
         });

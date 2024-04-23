@@ -2,7 +2,7 @@ GET http://localhost:5070/books
 
 ###
 
-GET http://localhost:5070/books/4
+GET http://localhost:5070/books/1
 
 ###
 
@@ -24,9 +24,9 @@ Content-Type: application/json
 
 {
     "name": "Harry Potter 2",
-    "genre": "Fantasy",
+    "genreId": 2,
     "price": 25.51,
-    "author": "J.K Rolling",
+    "authorId": 1,
     "releaseDate": "2020-09-12"
 }
 

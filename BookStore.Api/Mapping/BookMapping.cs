@@ -17,6 +17,19 @@ public static class BookMapping
         };
     }
 
+    public static Book ToEntity(this UpdateBookDto book, int id)
+    {
+        return new Book()
+        {
+            Id = id,
+            Name = book.Name,
+            GenreId = book.GenreId,
+            Price = book.Price,
+            AuthorId = book.AuthorId,
+            ReleaseDate = book.ReleaseDate
+        };
+    }
+
     public static BookSummaryDto ToBookSummaryDto(this Book book)
     {
         return new(
