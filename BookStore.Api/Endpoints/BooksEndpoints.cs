@@ -8,7 +8,7 @@ namespace BookStore.Api.Endpoints;
 public static class BooksEndpoints
 {
     const string GetBookEndpointName = "GetBook";
-    private static readonly List<BookDto> books = [
+    private static readonly List<BookSummaryDto> books = [
     new (
         1,
         "Harry Potter",
@@ -41,26 +41,23 @@ public static class BooksEndpoints
         group.MapGet("/", () => books);
 
         // GET /books/1
-        group.MapGet("/{id}", (int id) =>
+        group.MapGet("/{id}", (int id, BookStoreContext dbContext) =>
         {
-            BookDto? book = books.Find(book => book.Id == id);
+            Book? book = dbContext.Books.Find(id);
 
-            return book is null ? Results.NotFound() : Results.Ok(book);
+            return book is null ? Results.NotFound() : Results.Ok(book.ToBookDetailsDto());
         })
         .WithName(GetBookEndpointName);
 
         // POST /books
         group.MapPost("/", (CreateBookDto newBook, BookStoreContext dbContext) =>
         {
-
             Book book = newBook.ToEntity();
-            book.Genre = dbContext.Genres.Find(newBook.GenreId);
-            book.Author = dbContext.Authors.Find(newBook.AuthorId);
 
             dbContext.Books.Add(book);
             dbContext.SaveChanges();
 
-            return Results.CreatedAtRoute(GetBookEndpointName, new { id = book.Id }, book.ToDto());
+            return Results.CreatedAtRoute(GetBookEndpointName, new { id = book.Id }, book.ToBookDetailsDto());
         });
 
         // PUT /books/1
@@ -73,7 +70,7 @@ public static class BooksEndpoints
                 return Results.NotFound();
             }
 
-            books[index] = new BookDto(
+            books[index] = new BookSummaryDto(
                 id,
                 updatedBook.Name,
                 updatedBook.Genre,

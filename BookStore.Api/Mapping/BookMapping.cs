@@ -17,7 +17,7 @@ public static class BookMapping
         };
     }
 
-    public static BookDto ToDto(this Book book)
+    public static BookSummaryDto ToBookSummaryDto(this Book book)
     {
         return new(
             book.Id,
@@ -25,6 +25,18 @@ public static class BookMapping
             book.Genre!.Name,
             book.Price,
             book.Author!.Name,
+            book.ReleaseDate
+        );
+    }
+
+    public static BookDetailsDto ToBookDetailsDto(this Book book)
+    {
+        return new(
+            book.Id,
+            book.Name,
+            book.GenreId,
+            book.Price,
+            book.AuthorId,
             book.ReleaseDate
         );
     }
