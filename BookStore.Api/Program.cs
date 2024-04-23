@@ -3,7 +3,7 @@ using BookStore.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connString = "Data Source=BookStore.db";
+var connString = builder.Configuration.GetConnectionString("BookStore");
 builder.Services.AddSqlite<BookStoreContext>(connString);
 
 var app = builder.Build();
