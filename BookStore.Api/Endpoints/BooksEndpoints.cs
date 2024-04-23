@@ -31,7 +31,8 @@ public static class BooksEndpoints
 
     public static RouteGroupBuilder MapBooksEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("books");
+        var group = app.MapGroup("books")
+                        .WithParameterValidation();
 
         // GET /books
         group.MapGet("/", () => books);

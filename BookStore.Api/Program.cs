@@ -1,4 +1,3 @@
-using BookStore.Api.Dtos;
 using BookStore.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
