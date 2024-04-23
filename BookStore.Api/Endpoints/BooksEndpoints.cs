@@ -9,29 +9,6 @@ namespace BookStore.Api.Endpoints;
 public static class BooksEndpoints
 {
     const string GetBookEndpointName = "GetBook";
-    private static readonly List<BookSummaryDto> books = [
-    new (
-        1,
-        "Harry Potter",
-        "Fantasy",
-        20.51m,
-        "J.K Rolling",
-        new DateOnly(2018, 9, 12)),
-    new (
-        2,
-        "Death Note",
-        "Manga",
-        16.99m,
-        "Tsugumi Ōby",
-        new DateOnly(2010, 2, 19)),
-    new (
-        3,
-        "Wiedźmin",
-        "Fantasy",
-        10.98m,
-        "Andrzej Sapkowski",
-        new DateOnly(2009, 8, 24))
-    ];
 
     public static RouteGroupBuilder MapBooksEndpoints(this WebApplication app)
     {
@@ -86,9 +63,11 @@ public static class BooksEndpoints
         });
 
         // DELETE /book/
-        group.MapDelete("/{id}", (int id) =>
+        group.MapDelete("/{id}", (int id, BookStoreContext dbContext) =>
         {
-            books.RemoveAll(book => book.Id == id);
+            dbContext.Books
+                    .Where(book => book.Id == id)
+                    .ExecuteDelete();
 
             return Results.NoContent();
         });
