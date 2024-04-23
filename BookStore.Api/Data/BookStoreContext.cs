@@ -29,6 +29,5 @@ public class BookStoreContext(DbContextOptions<BookStoreContext> options)
             new { Id = 4, Name = "David McCullough" },
             new { Id = 5, Name = "Bill Bryson" }
         );
-
     }
 }
